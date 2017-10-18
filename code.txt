@@ -1,4 +1,6 @@
 A < 10
+SHOW A
 B < 20
+SHOW B
 C < ADD A B
 SHOW C

@@ -3,20 +3,25 @@ stack = []
 def pop():
     global stack
     if(len(stack)==0):
-        return(-1)
+        return("error")
     else:
         ret = stack[len(stack)-1]
         stack = stack[:len(stack)-1]
         return(ret)
 
-def key(token):
+def key(token, output):
 
     b = pop()
-    if token=='SHOW':
-        print("Output : ", b)
-        return
+    if b=='error':
+        return(True, "Missing token")
+    elif token=='SHOW':
+        output.append(("Output : ", b))
+        return(False, "")
 
     a = pop()
+    if a=='error':
+        return(True, "Missing token")
+
     if token=='ADD':
         push(a + b)
     elif token=='SUB':
@@ -26,12 +31,16 @@ def key(token):
     elif token=='MUL':
         push(a * b)
 
+    return(False, "")
+
 
 def push(num):
     stack.append(num)
 
-def auto(lst, values):
+def auto(lst, values, output):
     del stack[:]
+    error = False
+    errmsg = ""
 
     for tok in lst[::-1]:
         if tok[1]=='Variable':
@@ -39,9 +48,9 @@ def auto(lst, values):
         elif tok[1]=='Constant':
             push(tok[0])
         elif tok[1]=='Keyword':
-            key(tok[0]);
+            error, errmsg = key(tok[0], output);
         else:
             values[lst[0][0]] = pop()
             break;
 
-    return values
+    return output, values, error, errmsg
