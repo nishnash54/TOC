@@ -9,19 +9,17 @@ operators = {'<': '='}
 def lex(line):
 
     tokens = line.split(' ')
-    print("Tokens : ", tokens)
 
-    token_list = []
-    print("State table : ")
+    state_table = []
     for token in tokens:
         if token in keywords:
-            print (token, "Keyword", keywords[token])
-            token_list.append(keywords[token])
+            state_table.append((token, "Keyword", keywords[token]))
         elif token in operators:
-            print (token, "Operator", operators[token])
-            token_list.append(operators[token])
+            state_table.append((token, "Operator", operators[token]))
         else:
-            print (token, "Variable")
-            token_list.append(token)
+            if token.isdigit():
+                state_table.append((float(token), "Constant"))
+            else:
+                state_table.append((token, "Variable"))
 
-    return token_list
+    return state_table
